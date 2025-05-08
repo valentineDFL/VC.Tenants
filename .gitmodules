@@ -1,0 +1,3 @@
+[submodule "vc.shared"]
+	path = vc.shared
+	url = https://gitlab.com/tech-power-partners/vclients/vc.shared
