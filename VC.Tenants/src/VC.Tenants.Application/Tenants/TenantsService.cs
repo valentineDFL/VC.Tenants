@@ -14,20 +14,20 @@ internal class TenantsService : ITenantsService
     private readonly ISlugGenerator _slugGenerator;
     private readonly IEmailVerifyCodeGenerator _emailVerifyCodeGenerator;
 
-    private readonly IMailSender _mailSender;
+    //private readonly IMailSender _mailSender;
 
     private readonly ITenantEmailVerificationMessagesFactory _formFactory;
 
     public TenantsService(IUnitOfWork unitOfWork,
                           ISlugGenerator slugGenerator,
                           IEmailVerifyCodeGenerator emailVerifyCodeGenerator,
-                          IMailSender mailSender,
+                          //IMailSender mailSender,
                           ITenantEmailVerificationMessagesFactory formFactory)
     {
         _unitOfWork = unitOfWork;
         _slugGenerator = slugGenerator;
         _emailVerifyCodeGenerator = emailVerifyCodeGenerator;
-        _mailSender = mailSender;
+        //_mailSender = mailSender;
         _formFactory = formFactory;
     }
 
@@ -59,10 +59,10 @@ internal class TenantsService : ITenantsService
 
         var message = _formFactory.CreateAfterRegistration(code, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
 
-        var sendResult = await _mailSender.SendMailAsync(message);
+        //var sendResult = await _mailSender.SendMailAsync(message);
 
-        if (!sendResult.IsSuccess)
-            return Result.Fail(sendResult.Errors);
+        //if (!sendResult.IsSuccess)
+        //    return Result.Fail(sendResult.Errors);
 
         return Result.Ok();
     }
@@ -169,11 +169,11 @@ internal class TenantsService : ITenantsService
         await _unitOfWork.EmailVerificationRepository.UpdateAsync(emailVerification);
         await _unitOfWork.CommitAsync();
 
-        var message = _formFactory.CreateMessageForVerify(newVerifyCode, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
-        var sendMailResult = await _mailSender.SendMailAsync(message);
+        //var message = _formFactory.CreateMessageForVerify(newVerifyCode, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
+        //var sendMailResult = await _mailSender.SendMailAsync(message);
 
-        if (!sendMailResult.IsSuccess)
-            return Result.Fail(sendMailResult.Errors);
+        //if (!sendMailResult.IsSuccess)
+        //    return Result.Fail(sendMailResult.Errors);
 
         return Result.Ok();
     }

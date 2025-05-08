@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\vc.shared\VC.Shared\src\VC.Shared.Utilities\VC.Shared.Utilities.csproj" />
     <ProjectReference Include="..\VC.Tenants.Api\VC.Tenants.Api.csproj" />
     <ProjectReference Include="..\VC.Tenants.Application\VC.Tenants.Application.csproj" />
     <ProjectReference Include="..\VC.Tenants.Infrastructure\VC.Tenants.Infrastructure.csproj" />

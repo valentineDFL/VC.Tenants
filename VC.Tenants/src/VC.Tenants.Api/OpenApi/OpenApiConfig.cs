@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.OpenApi;
-using VC.Utilities;
+using VC.Shared.Utilities;
 
 namespace VC.Tenants.Api.OpenApi;
 

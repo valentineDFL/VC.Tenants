@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning;
 using OpenTelemetry.Metrics;
 
-namespace VC.Host;
+namespace VC.Tenants.Host;
 
 internal static class HostConfiguration
 {
@@ -25,7 +25,7 @@ internal static class HostConfiguration
                     Title = "Универсальная платформа для управления услугами и онлайн-бронирования с поддержкой мультитенантности",
                     Description = """
                                 <p>
-                                  <h3><a href="http://localhost:5056/scalar/tenants"
+                                  <h3><a href="http://localhost:5108/scalar/tenants"
                                     title="click">Управление арендаторами</a></h3>
                                 </p>
                                 <p>

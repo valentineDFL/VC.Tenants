@@ -7,7 +7,7 @@ using VC.Tenants.Infrastructure.Persistence;
 using VC.Tenants.Infrastructure.Persistence.Repositories;
 using VC.Tenants.Repositories;
 using VC.Tenants.UnitOfWork;
-using VC.Tenants.Utilities;
+using VC.Shared.Utilities;
 
 namespace VC.Tenants.Di;
 

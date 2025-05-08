@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using VC.Tenants.Entities;
-using VC.Tenants.Utilities;
-using VC.Tenants.Utilities.Resolvers;
+using VC.Shared.Utilities;
+using VC.Shared.Utilities.Resolvers;
 
 namespace VC.Tenants.Infrastructure.Persistence;
 

@@ -11,4 +11,10 @@
     <ProjectReference Include="..\VC.Tenants\VC.Tenants.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>VC.Tenants.Di</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
 </Project>
