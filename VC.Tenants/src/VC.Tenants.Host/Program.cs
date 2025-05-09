@@ -6,6 +6,7 @@ using VC.Shared.Utilities;
 using VC.Tenants.Host;
 using Serilog;
 using Mapster;
+using VC.Tenants.Host.Background_Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureTenantsModule(builder.Configuration);
 builder.Services.ConfigureUtilities(builder.Configuration);
 builder.Services.ConfigureHost();
+
+builder.Services.AddHostedService<OutboxBackgroundService>();
 
 builder.Services.AddHttpLogging();
 builder.Services.AddHealthChecks();

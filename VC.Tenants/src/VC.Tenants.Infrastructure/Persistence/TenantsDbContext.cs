@@ -25,6 +25,8 @@ public class TenantsDbContext : DbContext
 
     public DbSet<Tenant> Tenants { get; set; }
 
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(SchemaName);

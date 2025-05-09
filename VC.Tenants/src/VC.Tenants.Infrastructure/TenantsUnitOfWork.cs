@@ -7,9 +7,12 @@ namespace VC.Tenants.Infrastructure;
 
 internal class TenantsUnitOfWork : IUnitOfWork
 {
-    public ITenantRepository TenantRepository => _tenantRepository;
+    private readonly TenantsDbContext _tenantsDbContext;
+    public IDbContextTransaction _transaction;
 
-    public IEmailVerificationRepository EmailVerificationRepository => _emailVerificationRepository;
+    private readonly ITenantRepository _tenantRepository;
+    private readonly IEmailVerificationRepository _emailVerificationRepository;
+    private readonly IOutboxMessageRepository _outboxMessageRepository;
 
     public TenantsUnitOfWork(ITenantRepository tenantRepository, TenantsDbContext tenantsDbContext, IEmailVerificationRepository emailVerificationRepository)
     {
@@ -18,11 +21,11 @@ internal class TenantsUnitOfWork : IUnitOfWork
         _emailVerificationRepository = emailVerificationRepository;
     }
 
-    private readonly TenantsDbContext _tenantsDbContext;
-    public IDbContextTransaction _transaction;
+    public ITenantRepository TenantRepository => _tenantRepository;
 
-    private ITenantRepository _tenantRepository;
-    private IEmailVerificationRepository _emailVerificationRepository;
+    public IEmailVerificationRepository EmailVerificationRepository => _emailVerificationRepository;
+
+    public IOutboxMessageRepository OutboxMessageRepository => _outboxMessageRepository;
 
     public void Dispose()
         => _tenantsDbContext.Dispose();

@@ -1,4 +1,5 @@
 using FluentResults;
+using System.Text.Json;
 using VC.Tenants.Application.Contracts;
 using VC.Tenants.Application.Models.Create;
 using VC.Tenants.Application.Models.Update;
@@ -14,20 +15,16 @@ internal class TenantsService : ITenantsService
     private readonly ISlugGenerator _slugGenerator;
     private readonly IEmailVerifyCodeGenerator _emailVerifyCodeGenerator;
 
-    //private readonly IMailSender _mailSender;
-
     private readonly ITenantEmailVerificationMessagesFactory _formFactory;
 
     public TenantsService(IUnitOfWork unitOfWork,
                           ISlugGenerator slugGenerator,
                           IEmailVerifyCodeGenerator emailVerifyCodeGenerator,
-                          //IMailSender mailSender,
                           ITenantEmailVerificationMessagesFactory formFactory)
     {
         _unitOfWork = unitOfWork;
         _slugGenerator = slugGenerator;
         _emailVerifyCodeGenerator = emailVerifyCodeGenerator;
-        //_mailSender = mailSender;
         _formFactory = formFactory;
     }
 
@@ -59,10 +56,9 @@ internal class TenantsService : ITenantsService
 
         var message = _formFactory.CreateAfterRegistration(code, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
 
-        //var sendResult = await _mailSender.SendMailAsync(message);
+        var outboxMessage = OutboxMessage.Create(Guid.CreateVersion7(), JsonSerializer.Serialize(message), message.GetType().FullName, DateTime.UtcNow);
 
-        //if (!sendResult.IsSuccess)
-        //    return Result.Fail(sendResult.Errors);
+        await _unitOfWork.OutboxMessageRepository.AddMessageAsync(outboxMessage);
 
         return Result.Ok();
     }
@@ -169,11 +165,11 @@ internal class TenantsService : ITenantsService
         await _unitOfWork.EmailVerificationRepository.UpdateAsync(emailVerification);
         await _unitOfWork.CommitAsync();
 
-        //var message = _formFactory.CreateMessageForVerify(newVerifyCode, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
-        //var sendMailResult = await _mailSender.SendMailAsync(message);
+        var message = _formFactory.CreateMessageForVerify(newVerifyCode, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
 
-        //if (!sendMailResult.IsSuccess)
-        //    return Result.Fail(sendMailResult.Errors);
+        var outboxMessage = OutboxMessage.Create(Guid.CreateVersion7(), JsonSerializer.Serialize(message), message.GetType().FullName, DateTime.UtcNow);
+
+        await _unitOfWork.OutboxMessageRepository.AddMessageAsync(outboxMessage);
 
         return Result.Ok();
     }

@@ -8,6 +8,9 @@ using VC.Tenants.Infrastructure.Persistence.Repositories;
 using VC.Tenants.Repositories;
 using VC.Tenants.UnitOfWork;
 using VC.Shared.Utilities;
+using VC.Tenants.Application;
+using VC.Tenants.Infrastructure.Implementations.Rabbit;
+using VC.Tenants.Application.Contracts;
 
 namespace VC.Tenants.Di;
 
@@ -34,5 +37,9 @@ internal static class InfrastructureConfigurator
         services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRedisRepository>();
         services.AddScoped<IUnitOfWork, TenantsUnitOfWork>();
+        services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
+        services.AddScoped<IMessageHandler, RabbitMqMessageHandler>();
+
+        services.AddSingleton<IPublisher, DirectRabbitPublisher>();
     }
 }
