@@ -4,7 +4,7 @@ namespace VC.Tenants.Repositories;
 
 public interface IOutboxMessageRepository
 {
-    public Task<List<OutboxMessage?>> GetUnProcessedMessagesAsync();
+    public Task<List<OutboxMessage?>> GetUnProcessedMessagesByTypeAsync(string typeFullname);
 
     public Task<OutboxMessage?> GetMessageByIdAsync(Guid id);
 

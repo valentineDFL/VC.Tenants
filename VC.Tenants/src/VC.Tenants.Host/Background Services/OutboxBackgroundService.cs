@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using VC.Tenants.Application;
+using System.Reflection;
 
 namespace VC.Tenants.Host.Background_Services;
 
@@ -17,20 +17,30 @@ internal class OutboxBackgroundService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var sw = new Stopwatch();
+        var seconds = 0.0;
+
+        var outboxExtension = new OutboxBackgroundServiceExtension();
+        var outboxExtensionType = typeof(OutboxBackgroundServiceExtension);
+
+        var outboxExtensionMethods = outboxExtensionType
+            .GetMethods()
+            .Where(m => m.ReturnType == typeof(Task))
+            .ToList();
+
+        var tasks = new List<Task>();
+        var parameters = new object[]
+        {
+            _serviceScopeFactory,
+            stoppingToken
+        };
 
         try
         {
-            var seconds = 0.0;
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scope = _serviceScopeFactory.CreateScope();
-
-                var handler = scope.ServiceProvider.GetRequiredService<IMessageHandler>();
-
-                await handler.ExecuteAsync(stoppingToken);
+                await HandleAsync(tasks, outboxExtensionMethods, outboxExtension, parameters);
 
                 sw.Start();
-
                 while(seconds < SecondsFrequency)
                     seconds = sw.Elapsed.TotalSeconds;
 
@@ -38,9 +48,24 @@ internal class OutboxBackgroundService : BackgroundService
                 sw.Reset();
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // logging
+            
         }
+    }
+
+    private async Task HandleAsync(List<Task> tasks,
+                                   List<MethodInfo> outboxExtensionMethods,
+                                   OutboxBackgroundServiceExtension outboxExtension,
+                                   object[] parameters)
+    {
+        foreach (var outboxMethod in outboxExtensionMethods)
+        {
+            var methodTask = (Task)outboxMethod.Invoke(outboxExtension, parameters);
+            tasks.Add(methodTask);
+        }
+
+        await Task.WhenAll(tasks);
+        tasks.Clear();
     }
 }

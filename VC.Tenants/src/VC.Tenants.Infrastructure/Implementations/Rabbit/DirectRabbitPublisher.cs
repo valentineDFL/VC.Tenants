@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System.Text;
 using VC.Shared.Utilities;
@@ -29,20 +28,20 @@ internal class DirectRabbitPublisher : IPublisher
     {
         var dataBytes = Encoding.UTF8.GetBytes(data);
 
-        await _channel.BasicPublishAsync(exchange: exchange, routingKey: routeKey, body: dataBytes);
+        await _channel.BasicPublishAsync(exchange: string.Empty, routingKey: routeKey, body: dataBytes);
     }
 
     public async Task SendMessageToExchangeAsync(string exchange, string routeKey, int data, CancellationToken cts = default)
     {
         var dataBytes = Encoding.UTF8.GetBytes(data.ToString());
 
-        await _channel.BasicPublishAsync(exchange: exchange, routingKey: routeKey, body: dataBytes);
+        await _channel.BasicPublishAsync(exchange: string.Empty, routingKey: routeKey, body: dataBytes);
     }
 
     public async Task SendMessageToExchangeAsync(string exchange, string routeKey, bool data, CancellationToken cts = default)
     {
         var dataBytes = Encoding.UTF8.GetBytes(data.ToString());
 
-        await _channel.BasicPublishAsync(exchange: exchange, routingKey: routeKey, body: dataBytes);
+        await _channel.BasicPublishAsync(exchange: string.Empty, routingKey: routeKey, body: dataBytes);
     }
 }

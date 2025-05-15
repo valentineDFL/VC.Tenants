@@ -47,18 +47,18 @@ internal class TenantsService : ITenantsService
 
         var code = _emailVerifyCodeGenerator.GenerateCode();
 
-        var emailVerification = EmailVerification.Create(tenant.Id, 
-                                                         tenant.ContactInfo.EmailAddress, 
+        var emailVerification = EmailVerification.Create(tenant.Id,
+                                                         tenant.ContactInfo.EmailAddress,
                                                          code);
 
         await _unitOfWork.EmailVerificationRepository.AddAsync(emailVerification);
-        await _unitOfWork.CommitAsync();
 
         var message = _formFactory.CreateAfterRegistration(code, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
 
         var outboxMessage = OutboxMessage.Create(Guid.CreateVersion7(), JsonSerializer.Serialize(message), message.GetType().FullName, DateTime.UtcNow);
 
         await _unitOfWork.OutboxMessageRepository.AddMessageAsync(outboxMessage);
+        await _unitOfWork.CommitAsync();
 
         return Result.Ok();
     }
@@ -163,13 +163,13 @@ internal class TenantsService : ITenantsService
 
         var emailVerification = EmailVerification.Create(tenant.Id, tenant.ContactInfo.EmailAddress, newVerifyCode);
         await _unitOfWork.EmailVerificationRepository.UpdateAsync(emailVerification);
-        await _unitOfWork.CommitAsync();
 
         var message = _formFactory.CreateMessageForVerify(newVerifyCode, tenant.Name, tenant.ContactInfo.EmailAddress.Email);
 
         var outboxMessage = OutboxMessage.Create(Guid.CreateVersion7(), JsonSerializer.Serialize(message), message.GetType().FullName, DateTime.UtcNow);
 
         await _unitOfWork.OutboxMessageRepository.AddMessageAsync(outboxMessage);
+        await _unitOfWork.CommitAsync();
 
         return Result.Ok();
     }

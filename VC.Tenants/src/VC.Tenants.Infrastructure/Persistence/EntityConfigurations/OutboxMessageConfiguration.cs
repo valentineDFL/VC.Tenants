@@ -7,6 +7,8 @@ internal class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessa
 {
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
+        builder.HasQueryFilter(x => x.ProcessedOnUtc == null);
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Type)

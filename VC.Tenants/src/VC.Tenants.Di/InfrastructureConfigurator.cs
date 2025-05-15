@@ -11,6 +11,8 @@ using VC.Shared.Utilities;
 using VC.Tenants.Application;
 using VC.Tenants.Infrastructure.Implementations.Rabbit;
 using VC.Tenants.Application.Contracts;
+using VC.Shared.MailkitIntegration;
+using VC.Tenants.Infrastructure.Implementations;
 
 namespace VC.Tenants.Di;
 
@@ -29,17 +31,18 @@ internal static class InfrastructureConfigurator
             options.InstanceName = TenantsDbContext.CacheKeyPrefix;
         });
 
-        ConfigureRepositories(services);
+        ConfigureRepositories(services, configuration);
     }
 
-    private static void ConfigureRepositories(IServiceCollection services)
+    private static void ConfigureRepositories(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRedisRepository>();
-        services.AddScoped<IUnitOfWork, TenantsUnitOfWork>();
+        services.AddScoped<IUnitOfWork, PostgresTenantsUnitOfWork>();
         services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
-        services.AddScoped<IMessageHandler, RabbitMqMessageHandler>();
+        services.AddScoped<IMessageHandler<Message>, MailSendMessageHandler>();
 
+        services.Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)));
         services.AddSingleton<IPublisher, DirectRabbitPublisher>();
     }
 }

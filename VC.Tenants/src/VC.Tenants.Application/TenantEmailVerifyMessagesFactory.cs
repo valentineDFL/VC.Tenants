@@ -1,4 +1,5 @@
-﻿using VC.Tenants.Application.Contracts;
+﻿using VC.Shared.MailkitIntegration;
+using VC.Tenants.Application.Contracts;
 
 namespace VC.Tenants.Application;
 
@@ -9,7 +10,7 @@ internal class TenantEmailVerifyMessagesFactory : ITenantEmailVerificationMessag
         var subject = "Регистрация на сайте";
         var header = "Спасибо за регистрацию на сайте!";
 
-        var text = $"Вы зарегестрировались на нашем сайте, код подтверждения почты: {code}";
+        var text = $"Вы зарегистрировались на нашем сайте, код подтверждения почты: {code}";
 
         return new Message(subject, text, receiverName, receiverMail, header);
     }
