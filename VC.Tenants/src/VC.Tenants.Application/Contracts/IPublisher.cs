@@ -1,8 +1,8 @@
 ﻿namespace VC.Tenants.Application.Contracts;
 
-internal interface IPublisher
+public interface IPublisher
 {
-    public Task SendMessageToExchange(string routingKey, string data);
-    public Task SendMessageToExchange(string routingKey, int data);
-    public Task SendMessageToExchange(string routingKey, bool data);
+    public Task SendMessageToExchangeAsync(string exchange, string routeKey, string data, CancellationToken cts = default);
+    public Task SendMessageToExchangeAsync(string exchange, string routeKey, int data, CancellationToken cts = default);
+    public Task SendMessageToExchangeAsync(string exchange, string routeKey, bool data, CancellationToken cts = default);
 }

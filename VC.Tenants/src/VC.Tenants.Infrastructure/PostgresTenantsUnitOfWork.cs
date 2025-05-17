@@ -5,31 +5,38 @@ using VC.Tenants.UnitOfWork;
 
 namespace VC.Tenants.Infrastructure;
 
-internal class TenantsUnitOfWork : IUnitOfWork
+internal class PostgresTenantsUnitOfWork : IUnitOfWork
 {
-    public ITenantRepository TenantRepository => _tenantRepository;
+    private readonly TenantsDbContext _tenantsDbContext;
+    private IDbContextTransaction _transaction;
 
-    public IEmailVerificationRepository EmailVerificationRepository => _emailVerificationRepository;
+    private readonly ITenantRepository _tenantRepository;
+    private readonly IEmailVerificationRepository _emailVerificationRepository;
+    private readonly IOutboxMessageRepository _outboxMessageRepository;
 
-    public TenantsUnitOfWork(ITenantRepository tenantRepository, TenantsDbContext tenantsDbContext, IEmailVerificationRepository emailVerificationRepository)
+    public PostgresTenantsUnitOfWork(TenantsDbContext tenantsDbContext,
+                             ITenantRepository tenantRepository,
+                             IEmailVerificationRepository emailVerificationRepository,
+                             IOutboxMessageRepository outboxMessageRepository)
     {
         _tenantsDbContext = tenantsDbContext;
         _tenantRepository = tenantRepository;
         _emailVerificationRepository = emailVerificationRepository;
+        _outboxMessageRepository = outboxMessageRepository;
     }
 
-    private readonly TenantsDbContext _tenantsDbContext;
-    public IDbContextTransaction _transaction;
+    public ITenantRepository TenantRepository => _tenantRepository;
 
-    private ITenantRepository _tenantRepository;
-    private IEmailVerificationRepository _emailVerificationRepository;
+    public IEmailVerificationRepository EmailVerificationRepository => _emailVerificationRepository;
+
+    public IOutboxMessageRepository OutboxMessageRepository => _outboxMessageRepository;
 
     public void Dispose()
         => _tenantsDbContext.Dispose();
 
     public async Task BeginTransactionAsync()
     {
-        if (_transaction is not null)
+        if (_transaction is not null )
             throw new InvalidOperationException("Transaction already started!");
 
         _transaction = await _tenantsDbContext.Database.BeginTransactionAsync();

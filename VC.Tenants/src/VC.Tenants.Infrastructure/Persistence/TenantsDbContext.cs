@@ -25,6 +25,8 @@ public class TenantsDbContext : DbContext
 
     public DbSet<Tenant> Tenants { get; set; }
 
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(SchemaName);
@@ -37,7 +39,7 @@ public class TenantsDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSeeding((context, flag) =>
+        optionsBuilder.UseAsyncSeeding(async (context, flag, cts) =>
         {
             if (!_tenantModuleSettings.SeedingSettings.IsEnabled)
                 return;
@@ -51,9 +53,9 @@ public class TenantsDbContext : DbContext
 
             Tenant tenant = CreateSeedingTenant();
 
-            context.Set<Tenant>().Add(tenant);
+           await context.Set<Tenant>().AddAsync(tenant);
 
-            context.SaveChanges();
+           await context.SaveChangesAsync();
         });
     }
 

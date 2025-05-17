@@ -16,6 +16,7 @@ internal class TenantRepository : ITenantRepository
     public async Task AddAsync(Tenant entity)
         => await _dbContext.Tenants.AddAsync(entity);
 
+
     public async Task<Tenant?> GetAsync()
         => await _dbContext.Tenants
             .Include(x => x.WorkSchedule)
