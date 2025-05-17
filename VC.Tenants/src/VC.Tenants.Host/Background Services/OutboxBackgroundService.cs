@@ -16,9 +16,6 @@ internal class OutboxBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var sw = new Stopwatch();
-        var seconds = 0.0;
-
         var outboxExtension = new OutboxBackgroundServiceExtension();
         var outboxExtensionType = typeof(OutboxBackgroundServiceExtension);
 
@@ -40,12 +37,7 @@ internal class OutboxBackgroundService : BackgroundService
             {
                 await HandleAsync(tasks, outboxExtensionMethods, outboxExtension, parameters);
 
-                sw.Start();
-                while(seconds < SecondsFrequency)
-                    seconds = sw.Elapsed.TotalSeconds;
-
-                seconds = 0;
-                sw.Reset();
+                await Task.Delay(SecondsFrequency * 1000);
             }
         }
         catch (Exception ex)
