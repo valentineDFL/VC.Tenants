@@ -1,4 +1,6 @@
-﻿namespace VC.Tenants.Application.Contracts;
+﻿using VC.Shared.MailkitIntegration;
+
+namespace VC.Tenants.Application.Contracts;
 
 internal interface ITenantEmailVerificationMessagesFactory
 {
