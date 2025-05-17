@@ -9,7 +9,7 @@ internal class OutboxBackgroundServiceExtension
     {
         using var scope = serviceScopeFactory.CreateScope();
 
-        var handler = scope.ServiceProvider.GetRequiredService<IMessageHandler<Message>>();
+        var handler = scope.ServiceProvider.GetRequiredService<IOutboxMessageHandler<Message>>();
 
         await handler.ExecuteAsync(cts);
     }

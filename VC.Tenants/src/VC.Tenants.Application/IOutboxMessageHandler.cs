@@ -1,6 +1,6 @@
 ﻿namespace VC.Tenants.Application;
 
-public interface IMessageHandler<T>
+public interface IOutboxMessageHandler<T>
 {
     public Task ExecuteAsync(CancellationToken cts);
 }

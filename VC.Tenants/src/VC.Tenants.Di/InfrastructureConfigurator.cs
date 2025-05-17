@@ -40,7 +40,7 @@ internal static class InfrastructureConfigurator
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRedisRepository>();
         services.AddScoped<IUnitOfWork, PostgresTenantsUnitOfWork>();
         services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
-        services.AddScoped<IMessageHandler<Message>, MailSendMessageHandler>();
+        services.AddScoped<IOutboxMessageHandler<Message>, MailSendMessageHandler>();
 
         services.Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)));
         services.AddSingleton<IPublisher, DirectRabbitPublisher>();

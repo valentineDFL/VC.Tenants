@@ -5,7 +5,7 @@ using VC.Tenants.UnitOfWork;
 
 namespace VC.Tenants.Infrastructure.Implementations;
 
-internal class MailSendMessageHandler : IMessageHandler<Message>
+internal class MailSendMessageHandler : IOutboxMessageHandler<Message>
 {
     private readonly IUnitOfWork _unitOfWork;
 
