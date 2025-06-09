@@ -1,9 +1,10 @@
-﻿using VC.Tenants.Entities;
+﻿using VC.Tenants.Entities.Tenants;
 
 namespace VC.Tenants.Api.Models.Request.Create;
 
 public record CreateTenantRequest
-    (string Name,
+    (Guid UserId,
+     string Name,
      CreateConfigurationDto Config,
      TenantStatus Status,
      CreateContactInfoDto ContactInfo,

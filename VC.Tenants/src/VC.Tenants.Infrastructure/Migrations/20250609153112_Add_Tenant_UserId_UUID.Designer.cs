@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VC.Tenants.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using VC.Tenants.Infrastructure.Persistence;
 namespace VC.Tenants.Infrastructure.Migrations
 {
     [DbContext(typeof(TenantsDbContext))]
-    partial class TenantsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250609153112_Add_Tenant_UserId_UUID")]
+    partial class Add_Tenant_UserId_UUID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

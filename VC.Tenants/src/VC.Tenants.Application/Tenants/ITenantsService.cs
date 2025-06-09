@@ -1,7 +1,7 @@
 using FluentResults;
 using VC.Tenants.Application.Models.Create;
 using VC.Tenants.Application.Models.Update;
-using VC.Tenants.Entities;
+using VC.Tenants.Entities.Tenants;
 
 namespace VC.Tenants.Application.Tenants;
 

@@ -1,5 +1,4 @@
-﻿
-namespace VC.Tenants.Entities;
+﻿namespace VC.Tenants.Entities.Tenants;
 
 public class Address : ValueObject
 {

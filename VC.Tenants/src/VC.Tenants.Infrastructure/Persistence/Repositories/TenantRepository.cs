@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VC.Tenants.Entities;
+using VC.Tenants.Entities.Tenants;
 using VC.Tenants.Repositories;
 
 namespace VC.Tenants.Infrastructure.Persistence.Repositories;
@@ -13,17 +13,21 @@ internal class TenantRepository : ITenantRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddAsync(Tenant entity)
-        => await _dbContext.Tenants.AddAsync(entity);
-
-
     public async Task<Tenant?> GetAsync()
         => await _dbContext.Tenants
             .Include(x => x.WorkSchedule)
             .ThenInclude(x => x.WeekSchedule.OrderBy(d => d.Day))
             .AsNoTracking()
             .FirstOrDefaultAsync();
-    
+
+    public Task<Guid?> GetByUserIdAsync(Guid userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task AddAsync(Tenant entity)
+        => await _dbContext.Tenants.AddAsync(entity);
+
     public Task RemoveAsync(Tenant entity)
     {
         _dbContext.Tenants.Remove(entity);

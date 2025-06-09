@@ -7,12 +7,10 @@ using VC.Tenants.Infrastructure.Persistence;
 using VC.Tenants.Infrastructure.Persistence.Repositories;
 using VC.Tenants.Repositories;
 using VC.Tenants.UnitOfWork;
-using VC.Shared.Utilities;
 using VC.Tenants.Application;
-using VC.Tenants.Infrastructure.Implementations.Rabbit;
-using VC.Tenants.Application.Contracts;
 using VC.Shared.MailkitIntegration;
 using VC.Tenants.Infrastructure.Implementations;
+using VC.Shared.Utilities.Options;
 
 namespace VC.Tenants.Di;
 
@@ -43,6 +41,5 @@ internal static class InfrastructureConfigurator
         services.AddScoped<IOutboxMessageHandler<Message>, MailSendMessageHandler>();
 
         services.Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)));
-        services.AddSingleton<IPublisher, DirectRabbitPublisher>();
     }
 }

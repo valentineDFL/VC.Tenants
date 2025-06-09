@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using VC.Tenants.Api.Models.Request.Create;
-using VC.Tenants.Entities;
+using VC.Tenants.Entities.Tenants;
+using VC.Tenants.Entities.Tenants.ContactInfos;
 
 namespace VC.Tenants.Api.Validation;
 

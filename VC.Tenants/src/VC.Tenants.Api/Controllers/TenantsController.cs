@@ -12,7 +12,7 @@ using VC.Tenants.Application.Tenants;
 namespace VC.Tenants.Api.Controllers;
 
 [ApiController]
-[Route("[Controller]")]
+[Route("api/v1/[Controller]")]
 [ApiExplorerSettings(GroupName = OpenApi.OpenApiConfig.GroupName)]
 public class TenantsController : ControllerBase
 {
@@ -47,6 +47,14 @@ public class TenantsController : ControllerBase
         return Ok(mappedResponseDto);
     }
 
+    [HttpGet("{userId:guid}")]
+    public async Task<ActionResult<Guid>> GetByUserIdAsync(Guid userId)
+    {
+
+
+        return Ok();
+    }
+
     [HttpPost]
     public async Task<ActionResult> CreateAsync(CreateTenantRequest createRequest)
     {
@@ -65,7 +73,7 @@ public class TenantsController : ControllerBase
         return Ok(createResult);
     }
 
-    [HttpGet("verify-email")]
+    [HttpPost("verify-email")]
     public async Task<ActionResult<Result>> VerifyMailAsync([FromQuery] string code)
     {
         var verifyResult = await _tenantService.VerifyEmailAsync(code);

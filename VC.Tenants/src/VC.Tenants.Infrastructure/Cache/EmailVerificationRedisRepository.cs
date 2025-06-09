@@ -4,6 +4,7 @@ using VC.Tenants.Entities;
 using VC.Tenants.Repositories;
 using VC.Tenants.Infrastructure.Persistence;
 using VC.Tenants.Dtos;
+using VC.Tenants.Entities.Tenants.ContactInfos;
 
 namespace VC.Tenants.Infrastructure.Cache;
 

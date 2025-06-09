@@ -1,4 +1,6 @@
-﻿namespace VC.Tenants.Entities;
+﻿using VC.Tenants.Entities.Tenants.ContactInfos;
+
+namespace VC.Tenants.Entities;
 
 public class EmailVerification
 {

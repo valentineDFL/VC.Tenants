@@ -1,5 +1,6 @@
+using VC.Tenants.Entities.Tenants;
 
-namespace VC.Tenants.Entities;
+namespace VC.Tenants.Entities.Tenants.ContactInfos;
 
 /// <summary>
 /// Контактная информация.

@@ -1,4 +1,4 @@
-﻿using VC.Shared.Utilities;
+﻿using VC.Shared.Utilities.Options;
 
 namespace VC.Tenants;
 

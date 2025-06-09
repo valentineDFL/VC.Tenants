@@ -1,4 +1,7 @@
-namespace VC.Tenants.Entities;
+using VC.Tenants.Entities.Tenants.ContactInfos;
+using VC.Tenants.Entities.Tenants.Schedule;
+
+namespace VC.Tenants.Entities.Tenants;
 
 /// <summary>
 /// Арендатор.
@@ -11,9 +14,10 @@ public class Tenant
     public const int SlugMinLength = 10;
     public const int SlugMaxLength = 128;
 
-    private Tenant(Guid id, string name, string slug, TenantConfiguration config, TenantStatus status, ContactInfo contactInfo, WorkSchedule workSchedule)
+    private Tenant(Guid id, Guid userId, string name, string slug, TenantConfiguration config, TenantStatus status, ContactInfo contactInfo, WorkSchedule workSchedule)
     {
         Id = id;
+        UserId = userId;
         Name = name;
         Slug = slug;
         Config = config;
@@ -25,6 +29,8 @@ public class Tenant
     private Tenant() { }
 
     public Guid Id { get; private set; }
+
+    public Guid UserId { get; private set; }
 
     public string Name { get; private set; }
 
@@ -41,7 +47,7 @@ public class Tenant
 
     public WorkSchedule WorkSchedule { get; private set; }
 
-    public static Tenant Create(Guid id, string name, string slug, TenantConfiguration config, TenantStatus status, ContactInfo contactInfo, WorkSchedule workSchedule)
+    public static Tenant Create(Guid id, Guid userId, string name, string slug, TenantConfiguration config, TenantStatus status, ContactInfo contactInfo, WorkSchedule workSchedule)
     {
         if(id == Guid.Empty)
             throw new ArgumentException("Id cannot be empty");
@@ -61,7 +67,7 @@ public class Tenant
         if(workSchedule is null)
             throw new ArgumentNullException("WorkSchedule cannot be null");
 
-        return new Tenant(id, name, slug, config, status, contactInfo, workSchedule);
+        return new Tenant(id, userId, name, slug, config, status, contactInfo, workSchedule);
     }
 
     public void Update(TenantConfiguration config, TenantStatus status, ContactInfo contactInfo, WorkSchedule workSchedule)

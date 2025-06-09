@@ -4,6 +4,9 @@ using VC.Tenants.Application.Contracts;
 using VC.Tenants.Application.Models.Create;
 using VC.Tenants.Application.Models.Update;
 using VC.Tenants.Entities;
+using VC.Tenants.Entities.Tenants;
+using VC.Tenants.Entities.Tenants.ContactInfos;
+using VC.Tenants.Entities.Tenants.Schedule;
 using VC.Tenants.UnitOfWork;
 
 namespace VC.Tenants.Application.Tenants;
@@ -69,7 +72,7 @@ internal class TenantsService : ITenantsService
 
         var tenant = await _unitOfWork.TenantRepository.GetAsync();
 
-        if (tenant == null)
+        if (tenant is null)
             return Result.Fail(ErrorMessages.TenantNotFound);
 
         var tenantParams = CreateTenantParams(@params, tenant);
@@ -123,7 +126,7 @@ internal class TenantsService : ITenantsService
         var emailVerification = await _unitOfWork.EmailVerificationRepository
             .GetAsync(tenant.Id, tenant.ContactInfo.EmailAddress.Email);
 
-        if (emailVerification == null)
+        if (emailVerification is null)
             return Result.Fail(ErrorMessages.ConfirmationTimeHasExpired);
 
         if (emailVerification.Code != code)
@@ -195,7 +198,7 @@ internal class TenantsService : ITenantsService
 
         var slug = _slugGenerator.GenerateSlug(@params.Name);
 
-        return Tenant.Create(tenantId, @params.Name, slug, config, @params.Status, contactInfo, workShedule);
+        return Tenant.Create(tenantId, @params.UserId, @params.Name, slug, config, @params.Status, contactInfo, workShedule);
     }
 
     private (TenantConfiguration config, WorkSchedule schedule, ContactInfo contactInfo) CreateTenantParams(UpdateTenantParams @params, Tenant tenant)

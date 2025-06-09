@@ -1,4 +1,4 @@
-﻿using VC.Tenants.Entities;
+﻿using VC.Tenants.Entities.Tenants;
 
 namespace VC.Tenants.Api.Models.Request.Update;
 

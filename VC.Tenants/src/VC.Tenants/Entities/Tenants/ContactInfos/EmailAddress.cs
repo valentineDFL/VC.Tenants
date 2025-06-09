@@ -1,4 +1,4 @@
-﻿namespace VC.Tenants.Entities;
+﻿namespace VC.Tenants.Entities.Tenants.ContactInfos;
 
 public class EmailAddress : ValueObject
 {
