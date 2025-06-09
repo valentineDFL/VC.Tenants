@@ -20,7 +20,7 @@ internal class TenantRepository : ITenantRepository
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
-    public Task<Guid?> GetByUserIdAsync(Guid userId)
+    public Task<Guid?> GetIdByUserIdAsync(Guid userId)
     {
         throw new NotImplementedException();
     }

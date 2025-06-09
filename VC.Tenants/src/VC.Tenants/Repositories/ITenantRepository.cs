@@ -6,7 +6,7 @@ public interface ITenantRepository
 {
     public Task<Tenant?> GetAsync();
 
-    public Task<Guid?> GetByUserIdAsync(Guid userId);
+    public Task<Guid?> GetIdByUserIdAsync(Guid userId);
 
     public Task AddAsync(Tenant tenant);
 

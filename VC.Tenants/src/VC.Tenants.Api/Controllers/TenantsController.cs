@@ -50,7 +50,9 @@ public class TenantsController : ControllerBase
     [HttpGet("{userId:guid}")]
     public async Task<ActionResult<Guid>> GetByUserIdAsync(Guid userId)
     {
-
+        var getResult = await _tenantService.GetIdByUserIdAsync(userId);
+        if(!getResult.IsSuccess)
+            return NotFound(getResult);
 
         return Ok();
     }

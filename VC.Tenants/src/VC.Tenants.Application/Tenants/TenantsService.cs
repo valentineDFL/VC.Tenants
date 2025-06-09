@@ -41,6 +41,15 @@ internal class TenantsService : ITenantsService
         return Result.Ok(tenant);
     }
 
+    public async Task<Result<Guid>> GetIdByUserIdAsync(Guid userId)
+    {
+        var tenantId = await _unitOfWork.TenantRepository.GetIdByUserIdAsync(userId);
+        if (tenantId is null)
+            return Result.Fail("Not Found");
+
+        return Result.Ok(tenantId.Value);
+    }
+
     public async Task<Result> CreateAsync(CreateTenantParams @params)
     {
         var tenant = CreateTenantFromParams(@params);

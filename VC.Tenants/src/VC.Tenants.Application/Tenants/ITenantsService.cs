@@ -7,15 +7,17 @@ namespace VC.Tenants.Application.Tenants;
 
 public interface ITenantsService
 {
-    public Task<Result> CreateAsync(CreateTenantParams @params);
-
-    public Task<Result> DeleteAsync();
-
     public Task<Result<Tenant>> GetAsync();
 
-    public Task<Result> UpdateAsync(UpdateTenantParams @params);
+    public Task<Result<Guid>> GetIdByUserIdAsync(Guid userId);
+
+    public Task<Result> CreateAsync(CreateTenantParams @params);
 
     public Task<Result> VerifyEmailAsync(string code);
 
     public Task<Result> SendVerificationMailAsync();
+
+    public Task<Result> UpdateAsync(UpdateTenantParams @params);
+
+    public Task<Result> DeleteAsync();
 }
