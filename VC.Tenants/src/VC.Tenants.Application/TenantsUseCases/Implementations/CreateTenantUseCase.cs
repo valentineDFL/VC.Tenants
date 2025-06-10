@@ -1,5 +1,7 @@
 ﻿using FluentResults;
 using System.Text.Json;
+using VC.Shared.RabbitMQIntegration.Publishers.Interfaces;
+using VC.Shared.Utilities.RabbitEnums;
 using VC.Tenants.Application.Contracts;
 using VC.Tenants.Application.Models.Create;
 using VC.Tenants.Application.TenantsUseCases.Interfaces;
@@ -20,10 +22,13 @@ internal class CreateTenantUseCase : ICreateTenantUseCase
 
     private readonly ITenantEmailVerificationMessagesFactory _formFactory;
 
+    private readonly IPublisher _publisher;
+
     public CreateTenantUseCase(IUnitOfWork unitOfWork, 
                                ISlugGenerator slugGenerator, 
                                IEmailVerifyCodeGenerator emailVerifyCodeGenerator, 
-                               ITenantEmailVerificationMessagesFactory formFactory)
+                               ITenantEmailVerificationMessagesFactory formFactory,
+                               IPublisher publisher)
     {
         _unitOfWork = unitOfWork;
         _slugGenerator = slugGenerator;
@@ -34,9 +39,6 @@ internal class CreateTenantUseCase : ICreateTenantUseCase
     public async Task<Result<Tenant>> ExecuteAsync(CreateTenantParams @params)
     {
         var tenant = CreateTenantFromParams(@params);
-
-        await _unitOfWork.BeginTransactionAsync();
-        await _unitOfWork.TenantRepository.AddAsync(tenant);
 
         var code = _emailVerifyCodeGenerator.GenerateCode();
 
@@ -50,8 +52,14 @@ internal class CreateTenantUseCase : ICreateTenantUseCase
 
         var outboxMessage = OutboxMessage.Create(Guid.CreateVersion7(), JsonSerializer.Serialize(message), message.GetType().FullName, DateTime.UtcNow);
 
+        await _unitOfWork.BeginTransactionAsync();
+
+        await _unitOfWork.TenantRepository.AddAsync(tenant);
         await _unitOfWork.OutboxMessageRepository.AddMessageAsync(outboxMessage);
+
         await _unitOfWork.CommitAsync();
+
+        await _publisher.PublishAsync(tenant, Exchanges.CreatedTenantsDirect, RoutingKeys.CreatedTenantsKey, Queues.CreatedTenants);
 
         return Result.Ok();
     }

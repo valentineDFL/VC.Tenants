@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VC.Tenants.Application;
 using VC.Tenants.Application.Contracts;
-using VC.Tenants.Application.TenantsUseCases;
 using VC.Tenants.Application.TenantsUseCases.Implementations;
 using VC.Tenants.Application.TenantsUseCases.Interfaces;
 using VC.Tenants.Infrastructure.Implementations;

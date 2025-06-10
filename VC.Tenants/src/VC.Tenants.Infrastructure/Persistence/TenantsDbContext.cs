@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using VC.Tenants.Entities;
-using VC.Shared.Utilities;
 using VC.Shared.Utilities.Resolvers;
 using VC.Tenants.Entities.Tenants;
 using VC.Tenants.Entities.Tenants.Schedule;

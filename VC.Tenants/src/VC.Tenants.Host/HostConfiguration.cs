@@ -28,18 +28,6 @@ internal static class HostConfiguration
                                   <h3><a href="http://localhost:5108/scalar/tenants"
                                     title="click">Управление арендаторами</a></h3>
                                 </p>
-                                <p>
-                                  <h3><a href="http://localhost:5056/scalar/bookings"
-                                    title="click">Управление бронированиями</a></h3>
-                                </p>
-                                <p>
-                                  <h3><a href="http://localhost:5056/scalar/services"
-                                    title="click">Управление услугами</a></h3>
-                                </p><br/>
-                                <p>
-                                  <a href="https://gitlab.com/tech-power-partners/vclients/vc 
-                                    title="click"">GitLab - vclients</a>
-                                </p>
                               """
                 };
 

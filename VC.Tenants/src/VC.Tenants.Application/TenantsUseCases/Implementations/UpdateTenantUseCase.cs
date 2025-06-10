@@ -53,7 +53,7 @@ internal class UpdateTenantUseCase : IUpdateTenantUseCase
         await _unitOfWork.TenantRepository.UpdateAsync(tenant);
         await _unitOfWork.CommitAsync();
 
-        return Result.Ok();
+        return Result.Ok(tenant);
     }
 
     private (TenantConfiguration config, WorkSchedule schedule, ContactInfo contactInfo) CreateTenantParams(UpdateTenantParams @params, Tenant tenant)

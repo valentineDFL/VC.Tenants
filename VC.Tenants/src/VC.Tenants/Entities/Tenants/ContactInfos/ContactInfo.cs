@@ -1,5 +1,3 @@
-using VC.Tenants.Entities.Tenants;
-
 namespace VC.Tenants.Entities.Tenants.ContactInfos;
 
 /// <summary>
