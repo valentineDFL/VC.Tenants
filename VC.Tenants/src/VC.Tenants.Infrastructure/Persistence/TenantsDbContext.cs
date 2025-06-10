@@ -37,135 +37,132 @@ public class TenantsDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TenantsDbContext).Assembly);
 
         modelBuilder.Entity<Tenant>()
-            .HasQueryFilter(t => t.Id == _tenantResolver
-                .ResolveAsync()
-                .GetAwaiter()
-                .GetResult()
-                .Value);
+            .HasQueryFilter(t => t.Id == _tenantResolver.Resolve());
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //optionsBuilder.UseAsyncSeeding(async (context, flag, cts) =>
-        //{
-        //    if (!_tenantModuleSettings.SeedingSettings.IsEnabled)
-        //        return;
+        optionsBuilder.UseAsyncSeeding(async (context, flag, cts) =>
+        {
+            if (!_tenantModuleSettings.SeedingSettings.IsEnabled)
+                return;
 
-        //    var isTenantExists = context.Set<Tenant>()
-        //        .IgnoreQueryFilters()
-        //        .Any(t => t.Slug == SeedingDataBaseKeys.SeedTenantSlug);
+            var isTenantExists = context.Set<Tenant>()
+                .IgnoreQueryFilters()
+                .Any(t => t.Slug == SeedingDataBaseKeys.SeedTenantSlug);
 
-        //    if (isTenantExists)
-        //        return;
+            if (isTenantExists)
+                return;
 
-        //    Tenant tenant = CreateSeedingTenant();
+            Tenant tenant = CreateSeedingTenant();
 
-        //   await context.Set<Tenant>().AddAsync(tenant);
+            await context.Set<Tenant>().AddAsync(tenant);
 
-        //   await context.SaveChangesAsync();
-        //});
+            await context.SaveChangesAsync();
+        });
     }
 
-    //private Tenant CreateSeedingTenant()
-    //{
-    //    var tenantId = TenantsIds.StaticTenantId;
+    private Tenant CreateSeedingTenant()
+    {
+        var tenantId = Guid.Empty;
 
-    //    var config = TenantConfiguration.Create
-    //        (
-    //            "testtesttestdwihdwd",
-    //            "USD",
-    //            "RU",
-    //            "UTC"
-    //        );
+        var config = TenantConfiguration.Create
+            (
+                "testtesttestdwihdwd",
+                "USD",
+                "RU",
+                "UTC"
+            );
 
-    //    var address = Address.Create
-    //    (
-    //        "Ukraine",
-    //        "Kiev",
-    //        "Pushkina Street",
-    //        456
-    //    );
+        var address = Address.Create
+        (
+            "Ukraine",
+            "Kiev",
+            "Pushkina Street",
+            456
+        );
 
-    //    var emailAddress = EmailAddress.Create("v.clients.company@gmail.com", true);
+        var emailAddress = EmailAddress.Create("v.clients.company@gmail.com", true);
 
-    //    var contactInfo = ContactInfo.Create
-    //    (
-    //        "+123456789",
-    //        address,
-    //        emailAddress
-    //    );
+        var contactInfo = ContactInfo.Create
+        (
+            "+123456789",
+            address,
+            emailAddress
+        );
 
-    //    var weekSchedule = new List<DaySchedule>
-    //    {
-    //        DaySchedule.Create
-    //        (
-    //            Guid.CreateVersion7(),
-    //            tenantId,
-    //            DayOfWeek.Sunday,
-    //            DateTime.UtcNow,
-    //            DateTime.UtcNow.AddHours(8)
-    //        ),
-    //        DaySchedule.Create
-    //        (
-    //            Guid.CreateVersion7(),
-    //            tenantId,
-    //            DayOfWeek.Monday,
-    //            DateTime.UtcNow,
-    //            DateTime.UtcNow.AddHours(8)
-    //        ),
-    //        DaySchedule.Create
-    //        (
-    //            Guid.CreateVersion7(),
-    //            tenantId,
-    //            DayOfWeek.Tuesday,
-    //            DateTime.UtcNow,
-    //            DateTime.UtcNow.AddHours(8)
-    //        ),
-    //        DaySchedule.Create
-    //        (
-    //            Guid.CreateVersion7(),
-    //            tenantId,
-    //            DayOfWeek.Wednesday,
-    //            DateTime.UtcNow,
-    //            DateTime.UtcNow.AddHours(8)
-    //        ),
-    //        DaySchedule.Create
-    //        (
-    //            Guid.CreateVersion7(),
-    //            tenantId,
-    //            DayOfWeek.Thursday,
-    //            DateTime.UtcNow,
-    //            DateTime.UtcNow.AddHours(8)
-    //        ),
-    //        DaySchedule.Create
-    //        (
-    //            Guid.CreateVersion7(),
-    //            tenantId,
-    //            DayOfWeek.Friday,
-    //            DateTime.UtcNow,
-    //            DateTime.UtcNow.AddHours(8)
-    //        ),
-    //        DaySchedule.Create
-    //        (
-    //            Guid.CreateVersion7(),
-    //            tenantId,
-    //            DayOfWeek.Saturday,
-    //            DateTime.UtcNow,
-    //            DateTime.UtcNow.AddHours(8)
-    //        )
-    //    };
+        var weekSchedule = new List<DaySchedule>
+        {
+            DaySchedule.Create
+            (
+                Guid.CreateVersion7(),
+                tenantId,
+                DayOfWeek.Sunday,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8)
+            ),
+            DaySchedule.Create
+            (
+                Guid.CreateVersion7(),
+                tenantId,
+                DayOfWeek.Monday,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8)
+            ),
+            DaySchedule.Create
+            (
+                Guid.CreateVersion7(),
+                tenantId,
+                DayOfWeek.Tuesday,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8)
+            ),
+            DaySchedule.Create
+            (
+                Guid.CreateVersion7(),
+                tenantId,
+                DayOfWeek.Wednesday,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8)
+            ),
+            DaySchedule.Create
+            (
+                Guid.CreateVersion7(),
+                tenantId,
+                DayOfWeek.Thursday,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8)
+            ),
+            DaySchedule.Create
+            (
+                Guid.CreateVersion7(),
+                tenantId,
+                DayOfWeek.Friday,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8)
+            ),
+            DaySchedule.Create
+            (
+                Guid.CreateVersion7(),
+                tenantId,
+                DayOfWeek.Saturday,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8)
+            )
+        };
 
-    //    var workShedule = WorkSchedule.Create(weekSchedule);
+        var workShedule = WorkSchedule.Create(weekSchedule);
 
-    //    return Tenant.Create
-    //    (
-    //        tenantId,
-    //        "AdminTestTenant",
-    //        SeedingDataBaseKeys.SeedTenantSlug,
-    //        config,
-    //        TenantStatus.Active,
-    //        contactInfo,
-    //        workShedule
-    //    );
-    //}
+        return Tenant.Create
+        (
+            tenantId,
+            Guid.Empty,
+            "AdminTestTenant",
+            SeedingDataBaseKeys.SeedTenantSlug,
+            config,
+            TenantStatus.Active,
+            contactInfo,
+            workShedule
+        );
+    }
 }

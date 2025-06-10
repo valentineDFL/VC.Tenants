@@ -1,13 +1,13 @@
 ﻿using FluentResults;
 using FluentValidation;
-using MapsterMapper;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using VC.Tenants.Api.Models.Request.Create;
 using VC.Tenants.Api.Models.Request.Update;
 using VC.Tenants.Api.Models.Response;
 using VC.Tenants.Application.Models.Create;
 using VC.Tenants.Application.Models.Update;
-using VC.Tenants.Application.Tenants;
+using VC.Tenants.Application.TenantsUseCases.Interfaces;
 
 namespace VC.Tenants.Api.Controllers;
 
@@ -16,58 +16,50 @@ namespace VC.Tenants.Api.Controllers;
 [ApiExplorerSettings(GroupName = OpenApi.OpenApiConfig.GroupName)]
 public class TenantsController : ControllerBase
 {
-    private readonly ITenantsService _tenantService;
     private readonly IValidator<CreateTenantRequest> _createTenantValidator;
     private readonly IValidator<UpdateTenantRequest> _updateTenantValidator;
 
-    private readonly IMapper _mapper;
-
-    public TenantsController(ITenantsService tenantService,
-        IValidator<CreateTenantRequest> createTenantValidator,
-        IValidator<UpdateTenantRequest> updateTenantValidator,
-        IMapper mapper)
+    public TenantsController(IValidator<CreateTenantRequest> createTenantValidator,
+                             IValidator<UpdateTenantRequest> updateTenantValidator)
     {
-        _tenantService = tenantService;
         _createTenantValidator = createTenantValidator;
         _updateTenantValidator = updateTenantValidator;
-
-        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<ResponseTenantDto>> GetAsync()
+    public async Task<ActionResult<ResponseTenantDto>> GetAsync([FromServices] IGetTenantUseCase useCase)
     {
-        var getResult = await _tenantService.GetAsync();
+        var getResult = await useCase.ExecuteAsync();
 
         if (!getResult.IsSuccess)
             return BadRequest(getResult);
 
-        var mappedResponseDto = _mapper.Map<ResponseTenantDto>(getResult.Value);
+        var mappedResponseDto = getResult.Value.Adapt<ResponseTenantDto>();
 
         return Ok(mappedResponseDto);
     }
 
     [HttpGet("{userId:guid}")]
-    public async Task<ActionResult<Guid>> GetByUserIdAsync(Guid userId)
+    public async Task<ActionResult<Guid>> GetByUserIdAsync([FromServices] IGetTenantIdByUserIdUseCase useCase, Guid userId)
     {
-        var getResult = await _tenantService.GetIdByUserIdAsync(userId);
+        var getResult = await useCase.ExecuteAsync(userId);
         if(!getResult.IsSuccess)
             return NotFound(getResult);
 
-        return Ok();
+        return Ok(getResult);
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateAsync(CreateTenantRequest createRequest)
+    public async Task<ActionResult> CreateAsync([FromServices] ICreateTenantUseCase useCase, CreateTenantRequest createRequest)
     {
         var validationResult = await _createTenantValidator.ValidateAsync(createRequest);
 
         if (!validationResult.IsValid)
             return BadRequest(validationResult);
 
-        var mappedCreateDto = _mapper.Map<CreateTenantParams>(createRequest);
+        var mappedCreateDto = createRequest.Adapt<CreateTenantParams>();
 
-        var createResult = await _tenantService.CreateAsync(mappedCreateDto);
+        var createResult = await useCase.ExecuteAsync(mappedCreateDto);
 
         if (!createResult.IsSuccess)
             return BadRequest(createResult);
@@ -76,9 +68,9 @@ public class TenantsController : ControllerBase
     }
 
     [HttpPost("verify-email")]
-    public async Task<ActionResult<Result>> VerifyMailAsync([FromQuery] string code)
+    public async Task<ActionResult<Result>> VerifyMailAsync([FromServices] IVerifyTenantEmailUseCase useCase, [FromQuery] string code)
     {
-        var verifyResult = await _tenantService.VerifyEmailAsync(code);
+        var verifyResult = await useCase.ExecuteAsync(code);
 
         if(verifyResult.IsSuccess)
             return Ok(verifyResult);
@@ -87,9 +79,9 @@ public class TenantsController : ControllerBase
     }
 
     [HttpPost("send-verify-mail")]
-    public async Task<ActionResult<Result>> SendVerifyMailAsync()
+    public async Task<ActionResult<Result>> SendVerifyMailAsync([FromServices] ISendVerificationMailUseCase useCase)
     {
-        var sendMailResult = await _tenantService.SendVerificationMailAsync();
+        var sendMailResult = await useCase.ExecuteAsync();
 
         if(!sendMailResult.IsSuccess)
             return BadRequest();
@@ -98,16 +90,16 @@ public class TenantsController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdateAsync(UpdateTenantRequest updateRequest)
+    public async Task<ActionResult> UpdateAsync([FromServices] IUpdateTenantUseCase useCase, UpdateTenantRequest updateRequest)
     {
         var validationResult = await _updateTenantValidator.ValidateAsync(updateRequest);
 
         if (!validationResult.IsValid)
             return BadRequest(validationResult);
 
-        var mappedUpdateDto = _mapper.Map<UpdateTenantRequest, UpdateTenantParams>(updateRequest);
+        var mappedUpdateDto = updateRequest.Adapt<UpdateTenantParams>();
 
-        var updateResult = await _tenantService.UpdateAsync(mappedUpdateDto);
+        var updateResult = await useCase.ExecuteAsync(mappedUpdateDto);
 
         if (updateResult.IsSuccess)
             return Ok(updateResult);
@@ -116,9 +108,9 @@ public class TenantsController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DeleteByIdAsync()
+    public async Task<ActionResult> DeleteByIdAsync([FromServices] IDeleteTenantUseCase useCase)
     {
-        var deleteResult = await _tenantService.DeleteAsync();
+        var deleteResult = await useCase.ExecuteAsync();
 
         if (deleteResult.IsSuccess)
             return Ok();
